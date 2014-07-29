@@ -1438,13 +1438,23 @@ public class NumberPicker extends LinearLayout {
         removeAllCallbacks();
     }
 
+    private boolean shouldAlignLeft = false;
+
+    public void setAlignLeft() {
+        shouldAlignLeft = true;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         if (!mHasSelectorWheel) {
             super.onDraw(canvas);
             return;
         }
+
         float x = (getRight() - getLeft()) / 2;
+        if (shouldAlignLeft) {
+            x = getLeft();
+        }
         float y = mCurrentScrollOffset;
 
         // draw the virtual buttons pressed state if needed
