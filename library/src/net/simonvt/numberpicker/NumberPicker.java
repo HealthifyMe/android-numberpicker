@@ -1158,7 +1158,7 @@ public class NumberPicker extends LinearLayout {
     }
 
     /**
-     * Sets the listener to be notified when user clicked 
+     * Sets the listener to be notified when user clicked
      *
      * @param onInputClickedListener The listener.
      */

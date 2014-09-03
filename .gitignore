@@ -14,6 +14,7 @@ library/*
 !library/build.xml
 !library/project.properties
 !library/pom.xml
+!library/build.gradle
 
 !samples/
 samples/*
