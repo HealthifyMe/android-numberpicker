@@ -285,6 +285,11 @@ public class NumberPicker extends LinearLayout {
     private OnValueChangeListener mOnValueChangeListener;
 
     /**
+     * Listener to be notified when user clicks
+     */
+    private OnInputClickedListener mOnInputClickedListener;
+
+    /**
      * Listener to be notified upon scroll state change.
      */
     private OnScrollListener mOnScrollListener;
@@ -504,6 +509,20 @@ public class NumberPicker extends LinearLayout {
          * @param newVal The new value.
          */
         void onValueChange(NumberPicker picker, int oldVal, int newVal);
+    }
+
+    /**
+     * Interface to listen when user clicks on the input
+     */
+    public interface OnInputClickedListener {
+
+        /**
+         * Called when user clicks
+         *
+         * @param picker The NumberPicker associated with this listener.
+         * @param isOpen Is keypad open
+         */
+        void onInputClick(NumberPicker picker, boolean isOpen);
     }
 
     /**
@@ -1139,6 +1158,15 @@ public class NumberPicker extends LinearLayout {
     }
 
     /**
+     * Sets the listener to be notified when user clicked 
+     *
+     * @param onInputClickedListener The listener.
+     */
+    public void setOnInputClickedListener(OnInputClickedListener onInputClickedListener) {
+        mOnInputClickedListener = onInputClickedListener;
+    }
+
+    /**
      * Set listener to be notified for scroll state changes.
      *
      * @param onScrollListener The listener.
@@ -1203,13 +1231,17 @@ public class NumberPicker extends LinearLayout {
      * Shows the soft input for its input text.
      */
     private void showSoftInput() {
-        InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (inputMethodManager != null) {
-            if (mHasSelectorWheel) {
-                mInputText.setVisibility(View.VISIBLE);
+        if (mOnInputClickedListener != null) {
+            mOnInputClickedListener.onInputClick(this, true);
+        } else {
+            InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (inputMethodManager != null) {
+                if (mHasSelectorWheel) {
+                    mInputText.setVisibility(View.VISIBLE);
+                }
+                mInputText.requestFocus();
+                inputMethodManager.showSoftInput(mInputText, 0);
             }
-            mInputText.requestFocus();
-            inputMethodManager.showSoftInput(mInputText, 0);
         }
     }
 
@@ -2252,7 +2284,8 @@ public class NumberPicker extends LinearLayout {
         }
 
         public void sendAccessibilityEventForVirtualView(int virtualViewId, int eventType) {
-            if (mProvider != null) mProvider.sendAccessibilityEventForVirtualView(virtualViewId, eventType);
+            if (mProvider != null)
+                mProvider.sendAccessibilityEventForVirtualView(virtualViewId, eventType);
         }
     }
 
